@@ -9,7 +9,8 @@ function Quote(props) {
         return (
           <div key={key}>
             <p>{quotes.quoteText}</p>
-            <p>{quotes.quoteAuthor}</p>
+            <h3>{quotes.quoteAuthor}</h3>
+            <hr></hr>
           </div>
         );
       })}
