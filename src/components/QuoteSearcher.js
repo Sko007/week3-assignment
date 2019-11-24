@@ -6,7 +6,8 @@ class QuoteSearcher extends Component {
   state = {
     quotes: [],
     data: [{ liked: null, disliked: null, id: null }],
-    loading: true
+    loading: true,
+    count: []
   };
 
   componentDidMount() {
@@ -31,7 +32,8 @@ class QuoteSearcher extends Component {
 
   storeData(json) {
     this.setState({ quotes: json });
-    // this.setState({loading: false}) // Loading has some issues
+
+    this.setState({ loading: false });
   }
 
   //get data from Searchcomponent and set into state
@@ -48,51 +50,70 @@ class QuoteSearcher extends Component {
 
   //count like of each component
 
-  counter = like => {
-    console.log("value of like", like);
+  counter = (id, color) => {
+    console.log("lifting the state", id, color);
 
-    const counter = this.state.data.map(count => {
-      return { ...count, liked: like };
+    return this.state.quotes.forEach(ele => {
+      if (ele._id === id) {
+        this.setState({
+          count: this.state.count.concat({ color })
+        });
+
+      }
+      console.log("wie sieht der state aus?", this.state.count)
     });
-    console.log("test modified state data", counter);
-    this.setState({ data: counter });
-    console.log("check the State.data", this.state.data);
   };
-  //Count Dislike of Each component
 
-  counter1 = dislike => {
-    console.log("value of like", dislike);
+  counter1 = (id, color) => {
+    return this.state.quotes.forEach(ele => {
+      if (ele._id === id) {
+        this.setState({
+          count: this.state.count.concat({ color })
+        });
 
-    const counter = this.state.data.map(count => {
-      return { ...count, disliked: dislike };
+      }
+      console.log("wie sieht der state aus?", this.state.count)
     });
+  };
 
-    this.setState({ data: counter });
-    console.log("check the State.data", this.state.data);
+  renderQuote = element => {
+    return (
+      <Quote
+        load={this.state.loading}
+        id={element._id}
+        key={element.key}
+        counter={this.counter}
+        counter1={this.counter1}
+        liked={element.liked}
+        disliked={element.disliked}
+        author={element.quoteAuthor}
+        paragraph={element.quoteText}
+      />
+    );
   };
 
   render() {
     const status = this.state.loading;
 
-    console.log("state how the data looked", this.state.data);
+    // console.log("state how the data looked", this.state.data);
 
-    const filterBoolean = this.state.data.map(ele => {
-      return ele.liked;
+    const filterBoolean = this.state.count.map(ele => {
+      return ele.color;
     });
 
     const counter = filterBoolean.reduce(function(acc, count) {
-      return count ? acc + 1 : acc;
+      return count === "green" ? acc + 1 : acc;
     }, 0);
 
-    const filterBoolean1 = this.state.data.map(ele => {
-      return ele.disliked;
+    const filterBoolean1 = this.state.count.map(ele => {
+      return ele.color;
     });
 
     const counter1 = filterBoolean1.reduce(function(acc, count) {
-      return count ? acc + 1 : acc;
+      return count === "red" ? acc + 1 : acc;
     }, 0);
 
-    
+    // console.log("check state of quotes", this.state.quotes);
 
     // console.log("Datatype of Quotes", typeof this.state.quotes);
     // console.log("Datatype of Quotes", this.state.quotes);
@@ -105,24 +126,8 @@ class QuoteSearcher extends Component {
         <div>Likes:{counter}</div>
         <div>Dislikes:{counter1}</div>
         <hr></hr>
-        {!status && "loading"}
-        {status &&
-          this.state.quotes.map((element, key) => {
-            return (
-              <div key={key}>
-                <Quote
-                  id={element.id}
-                  key={element.key}
-                  counter={this.counter}
-                  counter1={this.counter1}
-                  liked={element.liked}
-                  disliked={element.disliked}
-                  author={element.quoteAuthor}
-                  paragraph={element.quoteText}
-                />
-              </div>
-            );
-          })}
+
+        <div> {this.state.quotes.map(this.renderQuote)}</div>
       </div>
     );
   }
