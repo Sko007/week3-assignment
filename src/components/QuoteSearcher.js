@@ -18,9 +18,9 @@ class QuoteSearcher extends Component {
       .catch(console.error);
   }
 
-  search = () => {
+  search = (name) => {
     fetch(
-      `https://quote-garden.herokuapp.com/quotes/search/${this.state.searchName}`
+      `https://quote-garden.herokuapp.com/quotes/search/name`
     )
       .then(data => data.json())
       .then(json => this.storeData(json.results))
@@ -45,7 +45,7 @@ class QuoteSearcher extends Component {
 
     console.log("how does the state look like after getData", this.state.data);
 
-    this.search();
+    this.search(name);
   };
 
   //count like of each component
