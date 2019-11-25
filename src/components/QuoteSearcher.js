@@ -20,7 +20,7 @@ class QuoteSearcher extends Component {
 
   search = (name) => {
     fetch(
-      `https://quote-garden.herokuapp.com/quotes/search/name`
+      `https://quote-garden.herokuapp.com/quotes/search/${name}`
     )
       .then(data => data.json())
       .then(json => this.storeData(json.results))
